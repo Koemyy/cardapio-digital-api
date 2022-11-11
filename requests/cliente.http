@@ -1,0 +1,16 @@
+### Criar Cliente
+POST http://localhost:3000/cliente/ HTTP/1.1
+content-type: application/json
+
+{
+    "cli_nome": "<até 4 digitos>"
+}
+
+### Logar Cliente
+POST http://localhost:3000/cliente/autenticar/ HTTP/1.1
+content-type: application/json
+
+{
+    "cli_nome": "<até 4 digitos>",
+    "cli_token": "<uuid gerado pela criação do cliente>"
+}

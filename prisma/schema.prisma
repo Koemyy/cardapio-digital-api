@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model amb_ambientes {
+  amb_id       Int            @id(map: "amb_pk") @default(autoincrement()) @db.SmallInt
+  amb_nome     String         @db.VarChar(50)
+  amb_status   String         @default("atv") @db.Char(3)
+  pro_produtos pro_produtos[]
+
+  @@unique([amb_id, amb_nome], map: "amb_unique")
+}
+
+model car_cardapios {
+  car_id                    Int                         @id(map: "car_pk") @default(autoincrement()) @db.SmallInt
+  car_nome                  String                      @db.VarChar(50)
+  car_descricao             String?                     @db.VarChar(300)
+  car_status                String                      @default("atv") @db.Char(3)
+  car_ses_cardapios_sessoes car_ses_cardapios_sessoes[]
+
+  @@unique([car_id, car_nome], map: "car_unique")
+}
+
+model car_ses_cardapios_sessoes {
+  car_id         Int           @default(autoincrement()) @db.SmallInt
+  ses_id         Int           @default(autoincrement()) @db.SmallInt
+  car_ses_status String        @db.Char(3)
+  car_cardapios  car_cardapios @relation(fields: [car_id], references: [car_id], onDelete: NoAction, map: "car_ses_fk_car_id")
+  ses_sessoes    ses_sessoes   @relation(fields: [ses_id], references: [ses_id], onDelete: NoAction, map: "car_ses_fk_ses_id")
+
+  @@id([car_id, ses_id], map: "car_ses_pk")
+}
+
+model cli_clientes {
+  cli_id      Int           @id(map: "cli_pk") @default(autoincrement())
+  cli_nome    String        @db.Char(4)
+  cli_token   String        @default(uuid()) @db.Uuid
+  cli_entrada DateTime?     @default(now()) @db.Timestamp(6)
+  cli_saida   DateTime?     @db.Timestamp(6)
+  cli_status  String        @default("atv") @db.Char(3)
+  ped_pedidos ped_pedidos[]
+}
+
+model com_combos {
+  pro_id_combo                                       Int          @default(autoincrement()) @db.SmallInt
+  pro_id                                             Int          @default(autoincrement()) @db.SmallInt
+  com_qtd                                            Int          @db.SmallInt
+  com_status                                         String       @db.Char(3)
+  pro_produtos_com_combos_pro_idTopro_produtos       pro_produtos @relation("com_combos_pro_idTopro_produtos", fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "com_fk_pro_id")
+  pro_produtos_com_combos_pro_id_comboTopro_produtos pro_produtos @relation("com_combos_pro_id_comboTopro_produtos", fields: [pro_id_combo], references: [pro_id], onDelete: NoAction, map: "com_fk_pro_id_combo")
+
+  @@id([pro_id_combo, pro_id], map: "com_pk")
+}
+
+model fun_funcionarios {
+  fun_id                           Int                                @id(map: "fun_pk") @default(autoincrement()) @db.SmallInt
+  fun_nome                         String                             @db.VarChar(50)
+  fun_senha                        String                             @db.VarChar(50)
+  fun_status                       String                             @default("atv") @db.Char(3)
+  pri_fun_privilegios_funcionarios pri_fun_privilegios_funcionarios[]
+}
+
+model ing_ingredientes {
+  ing_id                        Int                             @id(map: "ing_pk") @default(autoincrement()) @db.SmallInt
+  ing_nome                      String                          @db.VarChar(50)
+  ing_status                    String                          @default("atv") @db.Char(3)
+  ing_pro_ingredientes_produtos ing_pro_ingredientes_produtos[]
+
+  @@unique([ing_id, ing_nome], map: "ing_unique")
+}
+
+model ing_pro_ingredientes_produtos {
+  pro_id           Int              @default(autoincrement()) @db.SmallInt
+  ing_id           Int              @default(autoincrement()) @db.SmallInt
+  ing_pro_qtd      Int              @db.SmallInt
+  ing_pro_status   String           @db.Char(3)
+  ing_ingredientes ing_ingredientes @relation(fields: [ing_id], references: [ing_id], onDelete: NoAction, map: "ing_pro_fk_ing_id")
+  pro_produtos     pro_produtos     @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ing_pro_fk_pro_id")
+
+  @@id([pro_id, ing_id], map: "ing_pro_pk")
+}
+
+model ped_pedidos {
+  ped_id       Int          @id(map: "ped_pk") @db.SmallInt
+  cli_id       Int          @db.SmallInt
+  pro_id       Int          @db.SmallInt
+  ped_status   String       @default("agu") @db.Char(3)
+  ped_horario  DateTime     @default(now()) @db.Timestamp(6)
+  cli_clientes cli_clientes @relation(fields: [cli_id], references: [cli_id], onDelete: NoAction, map: "ped_fk_cli_id")
+  pro_produtos pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ped_fk_pro_id")
+}
+
+model pri_fun_privilegios_funcionarios {
+  pri_id           Int              @default(autoincrement()) @db.SmallInt
+  fun_id           Int              @default(autoincrement()) @db.SmallInt
+  pri_fun_status   String           @default("atv") @db.Char(3)
+  fun_funcionarios fun_funcionarios @relation(fields: [fun_id], references: [fun_id], onDelete: NoAction, map: "pri_fun_fk_fun_id")
+  pri_privilegios  pri_privilegios  @relation(fields: [pri_id], references: [pri_id], onDelete: NoAction, map: "pri_fun_fk_pri_id")
+
+  @@id([pri_id, fun_id], map: "pri_fun_pk")
+}
+
+model pri_privilegios {
+  pri_id                           Int                                @id(map: "pri_pk") @default(autoincrement()) @db.SmallInt
+  pri_nome                         String                             @db.VarChar(50)
+  pri_descricao                    String?                            @db.VarChar(300)
+  pri_status                       String                             @default("atv") @db.Char(3)
+  pri_fun_privilegios_funcionarios pri_fun_privilegios_funcionarios[]
+}
+
+model prm_promocoes {
+  prm_id        Int            @id(map: "prm_pk") @default(autoincrement()) @db.SmallInt
+  prm_nome      String         @db.VarChar(50)
+  prm_desconto  Decimal        @db.Decimal(5, 2)
+  prm_descricao String?        @db.VarChar(300)
+  prm_status    String         @db.Char(3)
+  pro_produtos  pro_produtos[]
+
+  @@unique([prm_id, prm_nome], map: "prm_unique")
+}
+
+model pro_produtos {
+  pro_id                                           Int                             @id(map: "pro_pk") @default(autoincrement()) @db.SmallInt
+  pro_nome                                         String                          @db.VarChar(50)
+  pro_preco                                        Decimal                         @db.Money
+  pro_descricao                                    String?                         @db.VarChar(300)
+  pro_serve                                        Int                             @default(1) @db.SmallInt
+  pro_imagem                                       String?                         @db.VarChar(200)
+  pro_combo                                        Boolean                         @default(false)
+  pro_status                                       String                          @default("atv") @db.Char(3)
+  amb_id                                           Int                             @default(autoincrement()) @db.SmallInt
+  prm_id                                           Int                             @default(autoincrement()) @db.SmallInt
+  amb_ambientes                                    amb_ambientes                   @relation(fields: [amb_id], references: [amb_id], onDelete: NoAction, map: "pro_fk_amb_id")
+  prm_promocoes                                    prm_promocoes                   @relation(fields: [prm_id], references: [prm_id], onDelete: NoAction, map: "pro_fk_prm_id")
+  com_combos_com_combos_pro_idTopro_produtos       com_combos[]                    @relation("com_combos_pro_idTopro_produtos")
+  com_combos_com_combos_pro_id_comboTopro_produtos com_combos[]                    @relation("com_combos_pro_id_comboTopro_produtos")
+  ing_pro_ingredientes_produtos                    ing_pro_ingredientes_produtos[]
+  ped_pedidos                                      ped_pedidos[]
+  ses_pro_sessoes_produtos                         ses_pro_sessoes_produtos[]
+  tag_pro_tags_produtos                            tag_pro_tags_produtos[]
+
+  @@unique([pro_id, pro_nome], map: "pro_unique")
+}
+
+model ses_pro_sessoes_produtos {
+  ses_id         Int          @default(autoincrement()) @db.SmallInt
+  pro_id         Int          @default(autoincrement()) @db.SmallInt
+  ses_pro_status String       @db.Char(3)
+  pro_produtos   pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ses_pro_fk_pro_id")
+  ses_sessoes    ses_sessoes  @relation(fields: [ses_id], references: [ses_id], onDelete: NoAction, map: "ses_pro_fk_ses_id")
+
+  @@id([ses_id, pro_id], map: "ses_pro_pk")
+}
+
+model ses_sessoes {
+  ses_id                    Int                         @id(map: "ses_pk") @default(autoincrement()) @db.SmallInt
+  ses_nome                  String                      @db.VarChar(50)
+  ses_cor                   String                      @db.Char(7)
+  ses_descricao             String?                     @db.VarChar(300)
+  ses_status                String                      @default("atv") @db.Char(3)
+  car_ses_cardapios_sessoes car_ses_cardapios_sessoes[]
+  ses_pro_sessoes_produtos  ses_pro_sessoes_produtos[]
+
+  @@unique([ses_id, ses_nome], map: "ses_unique")
+}
+
+model tag_pro_tags_produtos {
+  tag_id         Int          @default(autoincrement()) @db.SmallInt
+  pro_id         Int          @default(autoincrement()) @db.SmallInt
+  tag_pro_status String       @db.Char(3)
+  pro_produtos   pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "tag_pro_fk_pro_id")
+  tag_tags       tag_tags     @relation(fields: [tag_id], references: [tag_id], onDelete: NoAction, map: "tag_pro_fk_tag_id")
+
+  @@id([pro_id, tag_id], map: "tag_pro_pk")
+}
+
+model tag_tags {
+  tag_id                Int                     @id(map: "tag_pk") @default(autoincrement())
+  tag_nome              String                  @db.VarChar(50)
+  tag_descricao         String?                 @db.VarChar(300)
+  tag_status            String                  @default("atv") @db.Char(3)
+  tag_pro_tags_produtos tag_pro_tags_produtos[]
+
+  @@unique([tag_id, tag_nome], map: "tag_unique")
+}
