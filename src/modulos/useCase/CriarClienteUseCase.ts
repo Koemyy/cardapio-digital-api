@@ -1,4 +1,4 @@
-import { prisma } from "../../../database/prismaClient";
+import { prisma } from "../../database/prismaClient";
 
 export class CriarClienteUseCase {
     async execute(cli_nome: string) {
@@ -14,6 +14,7 @@ export class CriarClienteUseCase {
             throw new Error("Usuário já existe");
         }
 
+        //Criar cliente
         const cliente = await prisma.cli_clientes.create({
             data: {
                 cli_nome

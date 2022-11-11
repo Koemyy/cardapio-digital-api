@@ -57,12 +57,22 @@ model com_combos {
   @@id([pro_id_combo, pro_id], map: "com_pk")
 }
 
-model fun_funcionarios {
-  fun_id                           Int                                @id(map: "fun_pk") @default(autoincrement()) @db.SmallInt
-  fun_nome                         String                             @db.VarChar(50)
-  fun_senha                        String                             @db.VarChar(50)
-  fun_status                       String                             @default("atv") @db.Char(3)
-  pri_fun_privilegios_funcionarios pri_fun_privilegios_funcionarios[]
+model col_colaboradores {
+  col_id                            Int                                 @id(map: "col_pk") @default(autoincrement()) @db.SmallInt
+  col_nome                          String                              @db.VarChar(50)
+  col_email                         String                              @unique @db.VarChar(100)
+  col_senha                         String                              @db.VarChar(100)
+  fun_id                            Int                                 @default(autoincrement()) @db.SmallInt
+  col_status                        String                              @default("atv") @db.Char(3)
+  fun_funcoes                       fun_funcoes                         @relation(fields: [fun_id], references: [fun_id], onDelete: NoAction, map: "col_fk_fun_id")
+  pri_col_privilegios_colaboradores pri_col_privilegios_colaboradores[]
+}
+
+model fun_funcoes {
+  fun_id            Int                 @id(map: "fun_pk") @default(autoincrement()) @db.SmallInt
+  fun_nome          String              @db.VarChar(50)
+  fun_status        String              @default("atv") @db.Char(3)
+  col_colaboradores col_colaboradores[]
 }
 
 model ing_ingredientes {
@@ -95,22 +105,22 @@ model ped_pedidos {
   pro_produtos pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ped_fk_pro_id")
 }
 
-model pri_fun_privilegios_funcionarios {
-  pri_id           Int              @default(autoincrement()) @db.SmallInt
-  fun_id           Int              @default(autoincrement()) @db.SmallInt
-  pri_fun_status   String           @default("atv") @db.Char(3)
-  fun_funcionarios fun_funcionarios @relation(fields: [fun_id], references: [fun_id], onDelete: NoAction, map: "pri_fun_fk_fun_id")
-  pri_privilegios  pri_privilegios  @relation(fields: [pri_id], references: [pri_id], onDelete: NoAction, map: "pri_fun_fk_pri_id")
+model pri_col_privilegios_colaboradores {
+  pri_id            Int               @default(autoincrement()) @db.SmallInt
+  col_id            Int               @default(autoincrement()) @db.SmallInt
+  pri_col_status    String            @default("atv") @db.Char(3)
+  col_colaboradores col_colaboradores @relation(fields: [col_id], references: [col_id], onDelete: NoAction, map: "pri_col_fk_col_id")
+  pri_privilegios   pri_privilegios   @relation(fields: [pri_id], references: [pri_id], onDelete: NoAction, map: "pri_col_fk_pri_id")
 
-  @@id([pri_id, fun_id], map: "pri_fun_pk")
+  @@id([pri_id, col_id], map: "pri_col_pk")
 }
 
 model pri_privilegios {
-  pri_id                           Int                                @id(map: "pri_pk") @default(autoincrement()) @db.SmallInt
-  pri_nome                         String                             @db.VarChar(50)
-  pri_descricao                    String?                            @db.VarChar(300)
-  pri_status                       String                             @default("atv") @db.Char(3)
-  pri_fun_privilegios_funcionarios pri_fun_privilegios_funcionarios[]
+  pri_id                            Int                                 @id(map: "pri_pk") @default(autoincrement()) @db.SmallInt
+  pri_nome                          String                              @db.VarChar(50)
+  pri_descricao                     String?                             @db.VarChar(300)
+  pri_status                        String                              @default("atv") @db.Char(3)
+  pri_col_privilegios_colaboradores pri_col_privilegios_colaboradores[]
 }
 
 model prm_promocoes {

@@ -49,10 +49,21 @@ CREATE TABLE "com_combos" (
 );
 
 -- CreateTable
-CREATE TABLE "fun_funcionarios" (
+CREATE TABLE "col_colaboradores" (
+    "col_id" SMALLSERIAL NOT NULL,
+    "col_nome" VARCHAR(50) NOT NULL,
+    "col_email" VARCHAR(100) NOT NULL,
+    "col_senha" VARCHAR(50) NOT NULL,
+    "fun_id" SMALLSERIAL NOT NULL,
+    "col_status" CHAR(3) NOT NULL DEFAULT 'atv',
+
+    CONSTRAINT "col_pk" PRIMARY KEY ("col_id")
+);
+
+-- CreateTable
+CREATE TABLE "fun_funcoes" (
     "fun_id" SMALLSERIAL NOT NULL,
     "fun_nome" VARCHAR(50) NOT NULL,
-    "fun_senha" VARCHAR(50) NOT NULL,
     "fun_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "fun_pk" PRIMARY KEY ("fun_id")
@@ -89,12 +100,12 @@ CREATE TABLE "ped_pedidos" (
 );
 
 -- CreateTable
-CREATE TABLE "pri_fun_privilegios_funcionarios" (
+CREATE TABLE "pri_col_privilegios_colaboradores" (
     "pri_id" SMALLSERIAL NOT NULL,
-    "fun_id" SMALLSERIAL NOT NULL,
-    "pri_fun_status" CHAR(3) NOT NULL DEFAULT 'atv',
+    "col_id" SMALLSERIAL NOT NULL,
+    "pri_col_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
-    CONSTRAINT "pri_fun_pk" PRIMARY KEY ("pri_id","fun_id")
+    CONSTRAINT "pri_col_pk" PRIMARY KEY ("pri_id","col_id")
 );
 
 -- CreateTable
@@ -207,6 +218,9 @@ ALTER TABLE "com_combos" ADD CONSTRAINT "com_fk_pro_id" FOREIGN KEY ("pro_id") R
 ALTER TABLE "com_combos" ADD CONSTRAINT "com_fk_pro_id_combo" FOREIGN KEY ("pro_id_combo") REFERENCES "pro_produtos"("pro_id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "col_colaboradores" ADD CONSTRAINT "col_fk_fun_id" FOREIGN KEY ("fun_id") REFERENCES "fun_funcoes"("fun_id") ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ing_pro_ingredientes_produtos" ADD CONSTRAINT "ing_pro_fk_ing_id" FOREIGN KEY ("ing_id") REFERENCES "ing_ingredientes"("ing_id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -219,10 +233,10 @@ ALTER TABLE "ped_pedidos" ADD CONSTRAINT "ped_fk_cli_id" FOREIGN KEY ("cli_id") 
 ALTER TABLE "ped_pedidos" ADD CONSTRAINT "ped_fk_pro_id" FOREIGN KEY ("pro_id") REFERENCES "pro_produtos"("pro_id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pri_fun_privilegios_funcionarios" ADD CONSTRAINT "pri_fun_fk_fun_id" FOREIGN KEY ("fun_id") REFERENCES "fun_funcionarios"("fun_id") ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE "pri_col_privilegios_colaboradores" ADD CONSTRAINT "pri_col_fk_col_id" FOREIGN KEY ("col_id") REFERENCES "col_colaboradores"("col_id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pri_fun_privilegios_funcionarios" ADD CONSTRAINT "pri_fun_fk_pri_id" FOREIGN KEY ("pri_id") REFERENCES "pri_privilegios"("pri_id") ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE "pri_col_privilegios_colaboradores" ADD CONSTRAINT "pri_col_fk_pri_id" FOREIGN KEY ("pri_id") REFERENCES "pri_privilegios"("pri_id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "pro_produtos" ADD CONSTRAINT "pro_fk_amb_id" FOREIGN KEY ("amb_id") REFERENCES "amb_ambientes"("amb_id") ON DELETE NO ACTION ON UPDATE CASCADE;
