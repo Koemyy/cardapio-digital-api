@@ -1,4 +1,4 @@
-import { prisma } from "../../database/prismaClient";
+import { prisma } from "../../../database/prismaClient";
 import { hash } from "bcrypt";
 
 interface ICriarColaborador {
@@ -14,9 +14,7 @@ export class CriarColaboradorUseCase {
         //Validar se o email ja esta cadastrado
         const colaboradorExiste = await prisma.col_colaboradores.findFirst({
             where: {
-                col_email: {
-                    mode: "insensitive"
-                }
+                col_email
             }
         })
 

@@ -1,4 +1,4 @@
-import { prisma } from "../../database/prismaClient";
+import { prisma } from "../../../database/prismaClient";
 import { sign } from "jsonwebtoken";
 
 interface IAutenticarCliente {

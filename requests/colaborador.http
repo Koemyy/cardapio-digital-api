@@ -5,15 +5,15 @@ content-type: application/json
 {
     "col_nome": "Teste",
     "fun_id": 1,
-    "col_email": "Testeaa@gmail.com",
+    "col_email": "sim@gmail.com",
     "col_senha": "123"
 }
 
 ### Logar Colaborador
-POST http://localhost:3000/cliente/autenticar/ HTTP/1.1
+POST http://localhost:3000/colaborador/autenticar/ HTTP/1.1
 content-type: application/json
 
 {
-    "col_email": "Teste@gmail.com",
+    "col_email": "sim@gmail.com",
     "col_senha": "12"
 }

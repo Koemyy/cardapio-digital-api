@@ -3,7 +3,7 @@ POST http://localhost:3000/cliente/ HTTP/1.1
 content-type: application/json
 
 {
-    "cli_nome": "1234"
+    "cli_nome": "234"
 }
 
 ### Logar Cliente
@@ -11,6 +11,6 @@ POST http://localhost:3000/cliente/autenticar/ HTTP/1.1
 content-type: application/json
 
 {
-    "cli_nome": "<até 4 digitos>",
-    "cli_token": "<uuid gerado pela criação do cliente>"
+    "cli_nome": "234",
+    "cli_token": "4f5a2dcb-6782-429f-aa20-ad824197befe"
 }
