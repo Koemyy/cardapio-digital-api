@@ -5,7 +5,7 @@ export class ListaProdutosController {
     async handle(request: Request, response: Response) {
         const listaProdutosUseCase = new ListaProdutosUseCase();
 
-        const cardapio = await listaProdutosUseCase.naoaguento();
+        const cardapio = await listaProdutosUseCase.execute();
 
         return response.json(cardapio);
     }

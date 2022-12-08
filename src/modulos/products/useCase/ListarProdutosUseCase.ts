@@ -1,6 +1,6 @@
 import { prisma } from "../../../database/prismaClient"
 
-interface Retorno {
+interface Sessoes{
     ses_nome: string,
     produtos: Produto[]
 }
@@ -16,30 +16,16 @@ interface Produto {
 export class ListaProdutosUseCase {
 
     async execute() {
-        let retorno: Retorno[];
-        let produto: Produto;
-        let aux: Retorno;
-        
-        /*
-        let inferno: Produto = {
-            pro_id: 1,
-            pro_nome: 'elemento.pro_nome',
-            pro_preco: 123,
-            pro_descricao: 'elemento.pro_descricao',
-            pro_imagem: 'elemento.pro_imagem'
-        }
+        let retorno: Sessoes[] = [];
+        let auxRet: Sessoes;
 
-        let python: Produto[] = [];
-        python.push(inferno);
-       
-        console.log(python);
-        */
-        
-        
-        //aaasfuxproduto.push(aaauxproduto);
+        let produtos: Produto[] = [];
+        let auxPro: Produto;
 
+        let pro_produtos: any[]
+        let ses_nomes: any;
 
-        //console.log(aaauxproduto)
+        let auxNome: string
 
         const ses_pro: any[] = await prisma.$queryRaw
         `
@@ -56,19 +42,15 @@ export class ListaProdutosUseCase {
             ORDER BY 
                 ses_id ASC;
         `
-        let sessaoNome: any
-        let pro_produtos: any[]
-        let produtos: Produto[] = []
-        let auxproduto: Produto;
 
-        ses_pro.forEach( async element => {
-            sessaoNome = await prisma.ses_sessoes.findFirst({
+        for(let i=0; i<ses_pro.length; i++){
+            ses_nomes = await prisma.ses_sessoes.findFirst({
                 where: {
-                    ses_id: element.ses_id
+                    ses_id: ses_pro[i].ses_id
                 }
-            })
+            });
 
-            const nome: string = sessaoNome.ses_nome
+            auxNome = ses_nomes.ses_nome;
 
             pro_produtos = await prisma.$queryRaw
             `
@@ -81,39 +63,33 @@ export class ListaProdutosUseCase {
                     ON 
                         p.pro_id = sp.pro_id
                 WHERE
-                    sp.ses_id = ${element.ses_id} AND p.pro_status = 'atv'
+                    sp.ses_id = ${ses_pro[i].ses_id} AND p.pro_status = 'atv'
             `
-            
-            pro_produtos.forEach(elemento =>{
-            
-                auxproduto = {
+
+            pro_produtos.forEach(elemento => {
+
+                auxPro = {
                     pro_id: elemento.pro_id,
                     pro_nome: elemento.pro_nome,
                     pro_preco: elemento.pro_preco,
                     pro_descricao: elemento.pro_descricao,
                     pro_imagem: elemento.pro_imagem
-                }
+                };
+
+                produtos.push(auxPro);
+            });
+
+            auxRet = {
+                ses_nome: auxNome,
+                produtos: produtos
+            }
+
+            retorno.push(auxRet)
+
+        }
+
         
-                
-                //auxproduto = elemento;
-                
-                produtos.push(auxproduto);
-            })
-
-            console.log(produtos);
-            console.log(typeof(nome));
-            
-        });
+        return retorno;
         
-
-        
-        return produtos;
-        
-    }
-
-
-
-    naoaguento() {
-        return this.execute();
     }
 }
