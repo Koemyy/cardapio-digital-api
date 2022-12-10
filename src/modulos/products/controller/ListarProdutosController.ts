@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { ListaProdutosUseCase } from "../useCase/ListarProdutosUseCase";
+import { ListarProdutosUseCase } from "../useCase/ListarProdutosUseCase";
 
-export class ListaProdutosController {
+export class ListarProdutosController {
     async handle(request: Request, response: Response) {
-        const listaProdutosUseCase = new ListaProdutosUseCase();
+        const listarProdutosUseCase = new ListarProdutosUseCase();
 
-        const cardapio = await listaProdutosUseCase.execute();
+        const cardapio = await listarProdutosUseCase.execute();
 
         return response.json(cardapio);
     }

@@ -10,6 +10,7 @@ interface Produto {
     pro_id: number,
     pro_nome: string,
     pro_preco: number,
+    prm_desconto: number,
     pro_descricao: string,
     pro_imagem: string,
     tags: tag[]
@@ -21,7 +22,7 @@ interface tag {
     tag_cor: string
 }
 
-export class ListaProdutosUseCase {
+export class ListarProdutosUseCase {
 
     async execute() {
         let retorno: Sessoes[] = [];
@@ -72,18 +73,20 @@ export class ListaProdutosUseCase {
             pro_produtos = await prisma.$queryRaw
             `
             SELECT 
-                p.pro_id, p.pro_nome, p.pro_preco, p.pro_descricao, p.pro_imagem
+                p.pro_id, p.pro_nome, p.pro_preco, p.pro_descricao, p.pro_imagem, pr.prm_desconto, pr.prm_status
             FROM
                 ses_pro_sessoes_produtos sp
             INNER JOIN 
                 pro_produtos p
                 ON 
                     p.pro_id = sp.pro_id
+            INNER JOIN
+                prm_promocoes pr
+                ON
+                    pr.prm_id = p.prm_id
             WHERE
-                sp.ses_id = ${ses_pro[i].ses_id} AND p.pro_status = 'atv' 
+                sp.ses_id = ${ses_pro[i].ses_id} AND p.pro_status = 'atv'
             `
-
-            console.log(typeof(pro_produtos[0].pro_id));
 
             for(let i=0; i<pro_produtos.length; i++){
                 
@@ -117,10 +120,15 @@ export class ListaProdutosUseCase {
                     tags.push(auxTag);
                 });
 
+                let desconto: number;
+                if(pro_produtos[i].prm_status == 'atv') desconto = parseFloat(pro_produtos[i].prm_desconto);
+                else desconto = 0.0;
+
                 auxPro = {
                     pro_id: pro_produtos[i].pro_id,
                     pro_nome: pro_produtos[i].pro_nome,
                     pro_preco: parseFloat(pro_produtos[i].pro_preco),
+                    prm_desconto: desconto,
                     pro_descricao: pro_produtos[i].pro_descricao,
                     pro_imagem: pro_produtos[i].pro_imagem,
                     tags: tags
