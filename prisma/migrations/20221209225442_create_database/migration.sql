@@ -21,7 +21,7 @@ CREATE TABLE "car_cardapios" (
 CREATE TABLE "car_ses_cardapios_sessoes" (
     "car_id" SMALLSERIAL NOT NULL,
     "ses_id" SMALLSERIAL NOT NULL,
-    "car_ses_status" CHAR(3) NOT NULL,
+    "car_ses_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "car_ses_pk" PRIMARY KEY ("car_id","ses_id")
 );
@@ -43,7 +43,7 @@ CREATE TABLE "com_combos" (
     "pro_id_combo" SMALLSERIAL NOT NULL,
     "pro_id" SMALLSERIAL NOT NULL,
     "com_qtd" SMALLINT NOT NULL,
-    "com_status" CHAR(3) NOT NULL,
+    "com_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "com_pk" PRIMARY KEY ("pro_id_combo","pro_id")
 );
@@ -53,7 +53,7 @@ CREATE TABLE "col_colaboradores" (
     "col_id" SMALLSERIAL NOT NULL,
     "col_nome" VARCHAR(50) NOT NULL,
     "col_email" VARCHAR(100) NOT NULL,
-    "col_senha" VARCHAR(50) NOT NULL,
+    "col_senha" VARCHAR(100) NOT NULL,
     "fun_id" SMALLSERIAL NOT NULL,
     "col_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
@@ -83,7 +83,7 @@ CREATE TABLE "ing_pro_ingredientes_produtos" (
     "pro_id" SMALLSERIAL NOT NULL,
     "ing_id" SMALLSERIAL NOT NULL,
     "ing_pro_qtd" SMALLINT NOT NULL,
-    "ing_pro_status" CHAR(3) NOT NULL,
+    "ing_pro_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "ing_pro_pk" PRIMARY KEY ("pro_id","ing_id")
 );
@@ -124,7 +124,7 @@ CREATE TABLE "prm_promocoes" (
     "prm_nome" VARCHAR(50) NOT NULL,
     "prm_desconto" DECIMAL(5,2) NOT NULL,
     "prm_descricao" VARCHAR(300),
-    "prm_status" CHAR(3) NOT NULL,
+    "prm_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "prm_pk" PRIMARY KEY ("prm_id")
 );
@@ -149,7 +149,7 @@ CREATE TABLE "pro_produtos" (
 CREATE TABLE "ses_pro_sessoes_produtos" (
     "ses_id" SMALLSERIAL NOT NULL,
     "pro_id" SMALLSERIAL NOT NULL,
-    "ses_pro_status" CHAR(3) NOT NULL,
+    "ses_pro_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "ses_pro_pk" PRIMARY KEY ("ses_id","pro_id")
 );
@@ -169,7 +169,7 @@ CREATE TABLE "ses_sessoes" (
 CREATE TABLE "tag_pro_tags_produtos" (
     "tag_id" SMALLSERIAL NOT NULL,
     "pro_id" SMALLSERIAL NOT NULL,
-    "tag_pro_status" CHAR(3) NOT NULL,
+    "tag_pro_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
     CONSTRAINT "tag_pro_pk" PRIMARY KEY ("pro_id","tag_id")
 );
@@ -178,6 +178,7 @@ CREATE TABLE "tag_pro_tags_produtos" (
 CREATE TABLE "tag_tags" (
     "tag_id" SERIAL NOT NULL,
     "tag_nome" VARCHAR(50) NOT NULL,
+    "tag_cor" CHAR(7) NOT NULL,
     "tag_descricao" VARCHAR(300),
     "tag_status" CHAR(3) NOT NULL DEFAULT 'atv',
 
@@ -189,6 +190,9 @@ CREATE UNIQUE INDEX "amb_unique" ON "amb_ambientes"("amb_id", "amb_nome");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "car_unique" ON "car_cardapios"("car_id", "car_nome");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "col_colaboradores_col_email_key" ON "col_colaboradores"("col_email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ing_unique" ON "ing_ingredientes"("ing_id", "ing_nome");

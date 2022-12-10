@@ -29,7 +29,7 @@ model car_cardapios {
 model car_ses_cardapios_sessoes {
   car_id         Int           @default(autoincrement()) @db.SmallInt
   ses_id         Int           @default(autoincrement()) @db.SmallInt
-  car_ses_status String        @db.Char(3)
+  car_ses_status String        @default("atv") @db.Char(3)
   car_cardapios  car_cardapios @relation(fields: [car_id], references: [car_id], onDelete: NoAction, map: "car_ses_fk_car_id")
   ses_sessoes    ses_sessoes   @relation(fields: [ses_id], references: [ses_id], onDelete: NoAction, map: "car_ses_fk_ses_id")
 
@@ -50,7 +50,7 @@ model com_combos {
   pro_id_combo                                       Int          @default(autoincrement()) @db.SmallInt
   pro_id                                             Int          @default(autoincrement()) @db.SmallInt
   com_qtd                                            Int          @db.SmallInt
-  com_status                                         String       @db.Char(3)
+  com_status                                         String       @default("atv") @db.Char(3)
   pro_produtos_com_combos_pro_idTopro_produtos       pro_produtos @relation("com_combos_pro_idTopro_produtos", fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "com_fk_pro_id")
   pro_produtos_com_combos_pro_id_comboTopro_produtos pro_produtos @relation("com_combos_pro_id_comboTopro_produtos", fields: [pro_id_combo], references: [pro_id], onDelete: NoAction, map: "com_fk_pro_id_combo")
 
@@ -88,7 +88,7 @@ model ing_pro_ingredientes_produtos {
   pro_id           Int              @default(autoincrement()) @db.SmallInt
   ing_id           Int              @default(autoincrement()) @db.SmallInt
   ing_pro_qtd      Int              @db.SmallInt
-  ing_pro_status   String           @db.Char(3)
+  ing_pro_status   String           @default("atv") @db.Char(3)
   ing_ingredientes ing_ingredientes @relation(fields: [ing_id], references: [ing_id], onDelete: NoAction, map: "ing_pro_fk_ing_id")
   pro_produtos     pro_produtos     @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ing_pro_fk_pro_id")
 
@@ -128,7 +128,7 @@ model prm_promocoes {
   prm_nome      String         @db.VarChar(50)
   prm_desconto  Decimal        @db.Decimal(5, 2)
   prm_descricao String?        @db.VarChar(300)
-  prm_status    String         @db.Char(3)
+  prm_status    String         @default("atv") @db.Char(3)
   pro_produtos  pro_produtos[]
 
   @@unique([prm_id, prm_nome], map: "prm_unique")
@@ -160,7 +160,7 @@ model pro_produtos {
 model ses_pro_sessoes_produtos {
   ses_id         Int          @default(autoincrement()) @db.SmallInt
   pro_id         Int          @default(autoincrement()) @db.SmallInt
-  ses_pro_status String       @db.Char(3)
+  ses_pro_status String       @default("atv") @db.Char(3)
   pro_produtos   pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ses_pro_fk_pro_id")
   ses_sessoes    ses_sessoes  @relation(fields: [ses_id], references: [ses_id], onDelete: NoAction, map: "ses_pro_fk_ses_id")
 
@@ -182,7 +182,7 @@ model ses_sessoes {
 model tag_pro_tags_produtos {
   tag_id         Int          @default(autoincrement()) @db.SmallInt
   pro_id         Int          @default(autoincrement()) @db.SmallInt
-  tag_pro_status String       @db.Char(3)
+  tag_pro_status String       @default("atv") @db.Char(3)
   pro_produtos   pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "tag_pro_fk_pro_id")
   tag_tags       tag_tags     @relation(fields: [tag_id], references: [tag_id], onDelete: NoAction, map: "tag_pro_fk_tag_id")
 
@@ -192,6 +192,7 @@ model tag_pro_tags_produtos {
 model tag_tags {
   tag_id                Int                     @id(map: "tag_pk") @default(autoincrement())
   tag_nome              String                  @db.VarChar(50)
+  tag_cor               String                  @db.Char(7)
   tag_descricao         String?                 @db.VarChar(300)
   tag_status            String                  @default("atv") @db.Char(3)
   tag_pro_tags_produtos tag_pro_tags_produtos[]
