@@ -47,7 +47,7 @@ export class ListarPromocoesUseCase {
             auxProdutos = {
                 pro_id: elemento.pro_id,
                 pro_nome: elemento.pro_nome,
-                pro_preco: elemento.pro_preco,
+                pro_preco: parseFloat(elemento.pro_preco),
                 prm_desconto: parseFloat(elemento.prm_desconto),
                 pro_imagem: elemento.pro_imagem
             }

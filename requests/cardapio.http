@@ -2,10 +2,14 @@
 GET http://localhost:3000/cardapio/ HTTP/1.1
 content-type: application/json
 
-### Chamar cardapio
+### Chamar promocoes
 GET http://localhost:3000/cardapio/promocoes HTTP/1.1
 content-type: application/json
 
 ### Chamar produto
-GET http://localhost:3000/produto/5 HTTP/1.1
+GET http://localhost:3000/produto/1 HTTP/1.1
+content-type: application/json
+
+### Paths
+GET http://localhost:3000/paths/ HTTP/1.1
 content-type: application/json

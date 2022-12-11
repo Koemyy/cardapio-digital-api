@@ -11,6 +11,7 @@ interface Produto {
     pro_combo: boolean,
     amb_id: number,
     tags: Tag[]
+    ingredientes: Ingrediente[]
 }
 
 interface Tag {
@@ -19,17 +20,24 @@ interface Tag {
     tag_cor: string
 }
 
+interface Ingrediente {
+    ing_nome: string
+}
+
 export class RetornoProdutoUseCase {
 
     async execute(request: number) {
 
         let auxTag: Tag;
         let tags: Tag[] = [];
+
+        let auxIng: Ingrediente;
+        let ingredientes: Ingrediente[] = [];
         
         const pro_produto: any = await prisma.$queryRaw
         `
         SELECT 
-            p.pro_id, p.pro_nome, p.pro_preco, p.pro_descricao, p.pro_imagem, pr.prm_desconto, pr.prm_status
+            p.pro_id, p.pro_nome, p.pro_preco, p.pro_descricao, p.pro_serve, p.pro_imagem, pr.prm_desconto, pr.prm_status
         FROM
             pro_produtos p
         INNER JOIN
@@ -39,7 +47,11 @@ export class RetornoProdutoUseCase {
         WHERE
             p.pro_id = ${request} AND p.pro_status = 'atv'
         `
-        
+                
+        let desconto;
+        if(pro_produto[0].prm_status == "atv") desconto = parseFloat(pro_produto[0].prm_desconto)
+        else desconto = 0;
+
         const tag_tags: any[] = await prisma.$queryRaw
         `
             SELECT 
@@ -67,22 +79,45 @@ export class RetornoProdutoUseCase {
 
             tags.push(auxTag);
         });
+
+        const ing_ingredientes: any[] = await prisma.$queryRaw
+        `
+            SELECT 
+                i.ing_nome
+            FROM
+                ing_pro_ingredientes_produtos ip
+            INNER JOIN 
+                ing_ingredientes i
+                ON 
+                    i.ing_id = ip.ing_id
+            INNER JOIN
+                pro_produtos p
+                ON
+                    p.pro_id = ip.pro_id
+            WHERE
+                p.pro_id = ${pro_produto[0].pro_id} AND i.ing_status = 'atv' AND ip.ing_pro_status = 'atv'
+        `
         
-        let desconto;
-        if(pro_produto[0].prm_status == 'atv') desconto = parseFloat(pro_produto.prm_desconto)
-        else desconto = 0;
+        ing_ingredientes.forEach(elemento => {
+            auxIng= {
+                ing_nome: elemento.ing_nome
+            }
+
+            ingredientes.push(auxIng);
+        });
         
         const produto: Produto = {
             pro_id: pro_produto[0].pro_id,
             pro_nome: pro_produto[0].pro_nome,
-            pro_preco: parseInt(pro_produto[0].pro_preco),
+            pro_preco: parseFloat(pro_produto[0].pro_preco),
             prm_desconto: desconto,
             pro_descricao: pro_produto[0].pro_descricao,
             pro_serve: pro_produto[0].pro_serve,
             pro_imagem: pro_produto[0].pro_imagem,
             pro_combo: pro_produto[0].pro_combo,
             amb_id: pro_produto[0].amb_id,
-            tags: tags
+            tags: tags,
+            ingredientes: ingredientes
         }
         
         return produto;        

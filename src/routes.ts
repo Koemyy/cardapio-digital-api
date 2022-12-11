@@ -8,6 +8,8 @@ import { ListarProdutosController } from "./modulos/products/controller/ListarPr
 import { ListarPromocoesController } from "./modulos/products/controller/ListarPromocoesController";
 import { RetornoProdutoController } from "./modulos/products/controller/RetornoProdutoController";
 
+import { ProdutosAtivosController } from "./modulos/products/controller/ProdutosAtivocController";
+
 const routes = Router();
 
 const criarClienteController = new CriarClienteController();
@@ -17,6 +19,7 @@ const criarColaboradorController = new CriarColaboradorController();
 const autenticarColaboradorController = new AutenticarColaboradorController();
 const listarProdutosController = new ListarProdutosController;
 const listarPromocoesController  = new ListarPromocoesController ;
+const produtosAtivosController = new ProdutosAtivosController;
 
 const retornoProdutoController = new RetornoProdutoController;
 
@@ -30,5 +33,8 @@ routes.get("/cardapio/", listarProdutosController.handle);
 routes.get("/cardapio/promocoes", listarPromocoesController.handle);
 
 routes.get("/produto/:id", retornoProdutoController.handle);
+
+routes.get("/paths/", produtosAtivosController.handle);
+
 
 export { routes };
