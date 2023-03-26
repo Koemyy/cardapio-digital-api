@@ -24,7 +24,7 @@ const produtosAtivosController = new ProdutosAtivosController;
 const retornoProdutoController = new RetornoProdutoController;
 
 routes.post("/cliente/", criarClienteController.handle);
-routes.post("/cliente/autenticar/", autenticarClienteController.handle);
+routes.get("/cliente/autenticar/", autenticarClienteController.handle);
 
 routes.post("/colaborador/", criarColaboradorController.handle);
 routes.post("/colaborador/autenticar/", autenticarColaboradorController.handle);
