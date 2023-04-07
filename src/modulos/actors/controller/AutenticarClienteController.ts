@@ -7,12 +7,16 @@ export class AutenticarClienteController {
 
         cli_token = cli_token?.toString();
 
+
+        if(cli_token == undefined){
+            cli_token = "";
+        }
         const autenticarClienteUseCase = new AutenticarClienteUseCase();
         const result = await autenticarClienteUseCase.execute({
             
             cli_token
         })
 
-        return response.json(result);
+        return response.json({webToken: result});
     }
 }
