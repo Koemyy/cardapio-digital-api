@@ -9,7 +9,7 @@ export class AutenticarClienteUseCase {
     async execute({cli_token}: IAutenticarCliente) {
 
         if(cli_token == null || cli_token  == undefined){
-            throw new Error("invalido token");
+            throw new Error("Token invalido");
         }
 
         //Validar acesso a mesa
