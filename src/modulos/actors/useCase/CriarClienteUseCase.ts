@@ -10,7 +10,8 @@ export class CriarClienteUseCase {
             }
         })
 
-        if (clienteExiste) {
+
+        if (clienteExiste != null) {
             throw new Error("Usuário já existe");
         }
 
