@@ -96,7 +96,7 @@ model ing_pro_ingredientes_produtos {
 }
 
 model ped_pedidos {
-  ped_id       Int          @id(map: "ped_pk") @db.SmallInt
+  ped_id       Int          @id(map: "ped_pk") @default(autoincrement()) @db.SmallInt
   cli_id       Int          @db.SmallInt
   pro_id       Int          @db.SmallInt
   ped_status   String       @default("agu") @db.Char(3)
