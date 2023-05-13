@@ -10,6 +10,7 @@ import { RetornoProdutoController } from "./modulos/products/controller/RetornoP
 
 import { ProdutosAtivosController } from "./modulos/products/controller/ProdutosAtivocController";
 import { SalvarCompraController } from "./modulos/actions/controller/SalvarCompraController";
+import { CadastrarFuncaoController } from "./modulos/actions/controller/CadastrarFuncaoController";
 
 const routes = Router();
 
@@ -25,6 +26,7 @@ const produtosAtivosController = new ProdutosAtivosController;
 const retornoProdutoController = new RetornoProdutoController;
 
 const salvarCompraController = new SalvarCompraController();
+const cadastrarFuncaoController = new CadastrarFuncaoController();
 
 routes.post("/cliente/", criarClienteController.handle);
 routes.get("/cliente/autenticar/", autenticarClienteController.handle);
@@ -41,5 +43,6 @@ routes.get("/paths/", produtosAtivosController.handle);
 
 
 routes.post("/actions/salvarCompra", salvarCompraController.handle);
+routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
 
 export { routes };
