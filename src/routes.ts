@@ -9,6 +9,9 @@ import { ListarPromocoesController } from "./modulos/products/controller/ListarP
 import { RetornoProdutoController } from "./modulos/products/controller/RetornoProdutoController";
 
 import { ProdutosAtivosController } from "./modulos/products/controller/ProdutosAtivocController";
+import { SalvarCompraController } from "./modulos/actions/controller/SalvarCompraController";
+import { CadastrarFuncaoController } from "./modulos/actions/controller/CadastrarFuncaoController";
+import { ListarFuncoesController } from "./modulos/actions/controller/ListarFuncoesController";
 
 const routes = Router();
 
@@ -23,6 +26,10 @@ const produtosAtivosController = new ProdutosAtivosController;
 
 const retornoProdutoController = new RetornoProdutoController;
 
+const salvarCompraController = new SalvarCompraController();
+const cadastrarFuncaoController = new CadastrarFuncaoController();
+const listarFuncoesController = new ListarFuncoesController();
+
 routes.post("/cliente/", criarClienteController.handle);
 routes.get("/cliente/autenticar/", autenticarClienteController.handle);
 
@@ -36,5 +43,9 @@ routes.get("/produto/:id", retornoProdutoController.handle);
 
 routes.get("/paths/", produtosAtivosController.handle);
 
+
+routes.post("/actions/salvarCompra", salvarCompraController.handle);
+routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
+routes.get("/actions/listarFuncoes", listarFuncoesController.handle);
 
 export { routes };
