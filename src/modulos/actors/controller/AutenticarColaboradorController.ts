@@ -11,6 +11,6 @@ export class AutenticarColaboradorController {
             col_senha
         })
 
-        return response.json(result);
+        return response.json({webToken: result});
     }
 }

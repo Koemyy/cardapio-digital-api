@@ -12,6 +12,7 @@ import { ProdutosAtivosController } from "./modulos/products/controller/Produtos
 import { SalvarCompraController } from "./modulos/actions/controller/SalvarCompraController";
 import { CadastrarFuncaoController } from "./modulos/actions/controller/CadastrarFuncaoController";
 import { ListarFuncoesController } from "./modulos/actions/controller/ListarFuncoesController";
+import { EnsureAuthenticatedColaborador } from "./middlewares/ensureAuthenticatedColaborador";
 
 const routes = Router();
 
@@ -47,5 +48,7 @@ routes.get("/paths/", produtosAtivosController.handle);
 routes.post("/actions/salvarCompra", salvarCompraController.handle);
 routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
 routes.get("/actions/listarFuncoes", listarFuncoesController.handle);
+
+routes.get("/teste", EnsureAuthenticatedColaborador);
 
 export { routes };
