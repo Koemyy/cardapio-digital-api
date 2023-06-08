@@ -38,12 +38,13 @@ model car_ses_cardapios_sessoes {
 
 model cli_clientes {
   cli_id      Int           @id(map: "cli_pk") @default(autoincrement())
-  cli_nome    String        @db.Char(4)
+  mes_id      Int           @default(autoincrement()) @db.SmallInt
   cli_token   String        @default(uuid()) @db.Uuid
   cli_entrada DateTime?     @default(now()) @db.Timestamp(6)
   cli_saida   DateTime?     @db.Timestamp(6)
   cli_status  String        @default("atv") @db.Char(3)
   ped_pedidos ped_pedidos[]
+  mes_mesa    mes_mesa       @relation(fields: [mes_id], references: [mes_id], onDelete: NoAction, map: "cli_fk_mes_id")
 }
 
 model com_combos {
@@ -73,6 +74,12 @@ model fun_funcoes {
   fun_nome          String              @db.VarChar(50)
   fun_status        String              @default("atv") @db.Char(3)
   col_colaboradores col_colaboradores[]
+}
+
+model mes_mesa {
+  mes_id            Int                 @id(map: "mes_pk") @default(autoincrement()) @db.SmallInt
+  mes_status        String              @default("atv") @db.Char(3)
+  cli_clientes cli_clientes[]
 }
 
 model ing_ingredientes {

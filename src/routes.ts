@@ -13,6 +13,8 @@ import { SalvarCompraController } from "./modulos/actions/controller/SalvarCompr
 import { CadastrarFuncaoController } from "./modulos/actions/controller/CadastrarFuncaoController";
 import { ListarFuncoesController } from "./modulos/actions/controller/ListarFuncoesController";
 import { EnsureAuthenticatedColaborador } from "./middlewares/ensureAuthenticatedColaborador";
+import { PedidosController } from "./modulos/actions/controller/PedidosController";
+import { MesaController } from "./modulos/actions/controller/MesaController";
 
 const routes = Router();
 
@@ -30,6 +32,8 @@ const retornoProdutoController = new RetornoProdutoController;
 const salvarCompraController = new SalvarCompraController();
 const cadastrarFuncaoController = new CadastrarFuncaoController();
 const listarFuncoesController = new ListarFuncoesController();
+const pedidosController = new PedidosController();
+const mesaController = new MesaController();
 
 routes.post("/cliente/", criarClienteController.handle);
 routes.get("/cliente/autenticar/", autenticarClienteController.handle);
@@ -48,7 +52,14 @@ routes.get("/paths/", produtosAtivosController.handle);
 routes.post("/actions/salvarCompra", salvarCompraController.handle);
 routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
 routes.get("/actions/listarFuncoes", listarFuncoesController.handle);
+routes.post("/actions/atualizarPedido",pedidosController.atualizarStatusPedido);
+routes.get("/actions/buscarPedidosAtivos",pedidosController.buscarPedidosAtivos);
+routes.get("/actions/listarMesas",mesaController.listarMesas);
+routes.get("/actions/cadastrarMesa",mesaController.cadastrarMesa);
+
 
 routes.get("/teste", EnsureAuthenticatedColaborador);
+
+
 
 export { routes };
