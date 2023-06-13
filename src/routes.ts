@@ -53,7 +53,7 @@ routes.post("/actions/salvarCompra", salvarCompraController.handle);
 routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
 routes.get("/actions/listarFuncoes", listarFuncoesController.handle);
 routes.post("/actions/atualizarPedido",pedidosController.atualizarStatusPedido);
-routes.get("/actions/buscarPedidosAtivos",pedidosController.buscarPedidosAtivos);
+routes.post("/actions/buscarPedidos",pedidosController.buscarPedidosByFlag);
 routes.get("/actions/listarMesas",mesaController.listarMesas);
 routes.get("/actions/cadastrarMesa",mesaController.cadastrarMesa);
 

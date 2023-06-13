@@ -1,26 +1,30 @@
 import { prisma } from "../../../database/prismaClient";
 
 
-interface ped_pedidos{
+interface pedidos{
     ped_id : number,
     ped_status : string
 }
 
 export class PedidosUseCase{
-    async buscarPedidosAtivos() {
-        const ped_pedidos: [] = await prisma.$queryRaw
-            `
-                SELECT 
-                    *
-                FROM
-                    ped_pedidos 
-                WHERE ped_status  like 'A%'
-            `
-         return ped_pedidos;
+    async buscarPedidos(status: string) {
+        const pedidos = await prisma.$queryRaw
+          `
+          SELECT 
+            ped.*,
+            pro_nome,
+            cli.mes_id
+          FROM ped_pedidos ped
+          INNER JOIN pro_produtos pro ON pro.pro_id = ped.pro_id
+          INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
+          WHERE ped_status  like ${status}
+          `;
+      
+        return pedidos;
     }
 
 
-    async atualizarPedido({ped_id, ped_status } : ped_pedidos) {
+    async atualizarPedido({ped_id, ped_status } : pedidos) {
         const result = await prisma.$executeRaw
             `
                 UPDATE ped_pedidos

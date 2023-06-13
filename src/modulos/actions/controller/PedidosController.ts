@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import { PedidosUseCase } from "../useCase/PedidosUseCase";
 
 export class PedidosController{
-    async buscarPedidosAtivos(request: Request, response: Response) {
+    async buscarPedidosByFlag(request: Request, response: Response) {
         const pedidosUseCase = new PedidosUseCase();
-        const result = await pedidosUseCase.buscarPedidosAtivos();
+        const {status} = request.body;
+        
+        const result = await pedidosUseCase.buscarPedidos(status+'%');
         return response.status(200).json(result);
     }
 
