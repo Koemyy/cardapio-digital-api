@@ -23,10 +23,10 @@ export class AutenticarClienteUseCase {
             throw new Error("Mesa nao existe ou esta ativa");
         }
 
-        const {cli_nome} = clienteExiste
+        const {mes_id} = clienteExiste
         //Criar webtoken
-        const webToken = sign({cli_nome}, "40028922", {
-            subject: clienteExiste.cli_nome,
+        const webToken = sign({mes_id}, "40028922", {
+            subject: clienteExiste.mes_id.toString(),
             expiresIn: "1d"
         })
 
