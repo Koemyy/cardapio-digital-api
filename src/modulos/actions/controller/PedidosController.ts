@@ -11,6 +11,16 @@ export class PedidosController{
     }
 
 
+    async buscarTodosPedidos(request: Request, response: Response) {
+        const pedidosUseCase = new PedidosUseCase();
+        const {cli_id} = request.body;
+
+        const cli_id_number :number = parseInt(cli_id)
+        const result = await pedidosUseCase.buscarTodosPedidos(cli_id_number);
+        return response.status(200).json(result);
+    }
+
+
     async atualizarStatusPedido(request: Request, response: Response) {
         const { ped_id, ped_status } = request.body;
         const pedidosUseCase = new PedidosUseCase();
