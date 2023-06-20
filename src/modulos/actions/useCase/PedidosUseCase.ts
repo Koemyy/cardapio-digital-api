@@ -24,6 +24,34 @@ export class PedidosUseCase{
     }
 
 
+    async buscarTodosPedidos(cli_id : number) {
+        const pedidos = await prisma.$queryRaw
+          `
+          select 
+              cli_id,
+              pro_id,
+              sum(ped_quantidade)::text AS ped_quantidade,
+              pro_nome,
+              TO_CHAR(CAST(sum(ped_preco) AS numeric), '9999.99') as ped_preco
+	        from (
+		          SELECT 
+                  ped.cli_id,
+                  pro.pro_id,
+                  pro.pro_nome,
+                  ped.ped_quantidade,
+                  (pro_preco * ped.ped_quantidade) AS ped_preco
+              FROM ped_pedidos ped
+              INNER JOIN pro_produtos pro ON pro.pro_id = ped.pro_id
+              INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
+              WHERE cli.cli_id  = ${cli_id}
+	        ) as data
+          group by cli_id, pro_id, pro_nome
+          `;
+      
+        return pedidos;
+    }
+
+
     async atualizarPedido({ped_id, ped_status } : pedidos) {
         const result = await prisma.$executeRaw
             `

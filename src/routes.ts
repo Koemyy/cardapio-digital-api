@@ -54,6 +54,7 @@ routes.post("/actions/cadastrarFuncao", cadastrarFuncaoController.handle);
 routes.get("/actions/listarFuncoes", listarFuncoesController.handle);
 routes.post("/actions/atualizarPedido",pedidosController.atualizarStatusPedido);
 routes.post("/actions/buscarPedidos",pedidosController.buscarPedidosByFlag);
+routes.post("/actions/buscarTodosPedidos",pedidosController.buscarTodosPedidos);
 routes.get("/actions/listarMesas",mesaController.listarMesas);
 routes.get("/actions/cadastrarMesa",mesaController.cadastrarMesa);
 
