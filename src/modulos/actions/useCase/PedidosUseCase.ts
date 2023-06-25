@@ -17,7 +17,7 @@ export class PedidosUseCase{
           FROM ped_pedidos ped
           INNER JOIN pro_produtos pro ON pro.pro_id = ped.pro_id
           INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
-          WHERE ped_status  like ${status}
+          WHERE ped_status = ${status}
           `;
       
         return pedidos;
@@ -44,6 +44,7 @@ export class PedidosUseCase{
               INNER JOIN pro_produtos pro ON pro.pro_id = ped.pro_id
               INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
               WHERE cli.cli_id  = ${cli_id}
+              and ped.ped_status <> 'PG'
 	        ) as data
           group by cli_id, pro_id, pro_nome
           `;
@@ -58,6 +59,18 @@ export class PedidosUseCase{
                 UPDATE ped_pedidos
                 SET ped_status = ${ped_status}
                 WHERE ped_id = ${ped_id}
+            
+            `;
+        return result;
+    }
+
+
+    async atualizarPedidoByCliente(cli_id  : number,  ped_status : string) {
+        const result = await prisma.$executeRaw
+            `
+                UPDATE ped_pedidos
+                SET ped_status = ${ped_status}
+                WHERE cli_id = ${cli_id}
             
             `;
         return result;
