@@ -5,8 +5,7 @@ export class PedidosController{
     async buscarPedidosByFlag(request: Request, response: Response) {
         const pedidosUseCase = new PedidosUseCase();
         const {status} = request.body;
-        
-        const result = await pedidosUseCase.buscarPedidos(status+'%');
+        const result = await pedidosUseCase.buscarPedidos(status.trim());
         return response.status(200).json(result);
     }
 
@@ -25,6 +24,14 @@ export class PedidosController{
         const { ped_id, ped_status } = request.body;
         const pedidosUseCase = new PedidosUseCase();
         const result = await pedidosUseCase.atualizarPedido({ped_id, ped_status});
+        return response.status(200).json({linhasAtualizadas: result});
+    }
+
+
+    async atualizarStatusPedidoByCliente(request: Request, response: Response) {
+        const { cli_id, ped_status } = request.body;
+        const pedidosUseCase = new PedidosUseCase();
+        const result = await pedidosUseCase.atualizarPedidoByCliente(cli_id, ped_status);
         return response.status(200).json({linhasAtualizadas: result});
     }
 }
