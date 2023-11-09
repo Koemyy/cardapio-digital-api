@@ -9,7 +9,7 @@ interface pedidos{
 export class PedidosUseCase{
     async buscarPedidos(status: string) {
         const pedidos = await prisma.$queryRaw
-          `
+            `
           SELECT 
             ped.*,
             pro_nome,
@@ -19,13 +19,13 @@ export class PedidosUseCase{
           INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
           WHERE ped_status = ${status}
           `;
-      
+
         return pedidos;
     }
 
     async buscarPedidosParaPagamento(status: string) {
         const pedidos = await prisma.$queryRaw
-          `
+            `
           SELECT 
             ped.*,
             pro_nome,
@@ -35,14 +35,14 @@ export class PedidosUseCase{
           INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
           WHERE ped.ped_status_pg = ${status}
           `;
-      
+
         return pedidos;
     }
 
 
     async buscarTodosPedidos(cli_id : number) {
         const pedidos = await prisma.$queryRaw
-          `
+            `
           select 
               cli_id,
               pro_id,
@@ -64,7 +64,7 @@ export class PedidosUseCase{
 	        ) as data
           group by cli_id, pro_id, pro_nome
           `;
-      
+
         return pedidos;
     }
 
@@ -80,14 +80,15 @@ export class PedidosUseCase{
         return result;
     }
 
-    async atualizarStatusPagamentoPedido({ped_id, ped_status } : pedidos) {
+    async atualizarStatusPagamentoPedidoByCliente(cli_id: number, ped_status: string) {
         const result = await prisma.$executeRaw
             `
                 UPDATE ped_pedidos
                 SET ped_status_pg = ${ped_status}
-                WHERE ped_id = ${ped_id}
-            
-            `;
+                WHERE cli_id = ${cli_id}
+                and ped_status <> 'PG'
+    
+             `;
         return result;
     }
 
