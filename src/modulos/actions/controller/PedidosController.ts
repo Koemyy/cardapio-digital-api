@@ -9,6 +9,13 @@ export class PedidosController{
         return response.status(200).json(result);
     }
 
+    async buscarPedidosParaPagamentoByFlag(request: Request, response: Response) {
+        const pedidosUseCase = new PedidosUseCase();
+        const {status} = request.body;
+        const result = await pedidosUseCase.buscarPedidosParaPagamento(status.trim());
+        return response.status(200).json(result);
+    }
+
 
     async buscarTodosPedidos(request: Request, response: Response) {
         const pedidosUseCase = new PedidosUseCase();
@@ -24,6 +31,15 @@ export class PedidosController{
         const { ped_id, ped_status } = request.body;
         const pedidosUseCase = new PedidosUseCase();
         const result = await pedidosUseCase.atualizarPedido({ped_id, ped_status});
+
+        return response.status(200).json({linhasAtualizadas: result});
+    }
+
+    async atualizarStatusPagementoPedido(request: Request, response: Response) {
+        const { ped_id, ped_status } = request.body;
+        const pedidosUseCase = new PedidosUseCase();
+        const result = await pedidosUseCase.atualizarStatusPagamentoPedido({ped_id, ped_status});
+       
         return response.status(200).json({linhasAtualizadas: result});
     }
 

@@ -23,6 +23,22 @@ export class PedidosUseCase{
         return pedidos;
     }
 
+    async buscarPedidosParaPagamento(status: string) {
+        const pedidos = await prisma.$queryRaw
+          `
+          SELECT 
+            ped.*,
+            pro_nome,
+            cli.mes_id
+          FROM ped_pedidos ped
+          INNER JOIN pro_produtos pro ON pro.pro_id = ped.pro_id
+          INNER JOIN cli_clientes cli ON cli.cli_id = ped.cli_id
+          WHERE ped.ped_status_pg = ${status}
+          `;
+      
+        return pedidos;
+    }
+
 
     async buscarTodosPedidos(cli_id : number) {
         const pedidos = await prisma.$queryRaw
@@ -58,6 +74,17 @@ export class PedidosUseCase{
             `
                 UPDATE ped_pedidos
                 SET ped_status = ${ped_status}
+                WHERE ped_id = ${ped_id}
+            
+            `;
+        return result;
+    }
+
+    async atualizarStatusPagamentoPedido({ped_id, ped_status } : pedidos) {
+        const result = await prisma.$executeRaw
+            `
+                UPDATE ped_pedidos
+                SET ped_status_pg = ${ped_status}
                 WHERE ped_id = ${ped_id}
             
             `;
