@@ -86,7 +86,7 @@ export class PedidosUseCase{
                 UPDATE ped_pedidos
                 SET ped_status_pg = ${ped_status}
                 WHERE cli_id = ${cli_id}
-                and ped_status <> 'PG'
+                and ped_status_pg <> 'PG'
     
              `;
         return result;
