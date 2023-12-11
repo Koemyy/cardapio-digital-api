@@ -7,10 +7,11 @@ import { prisma } from "../../../database/prismaClient";
      ped_status : string
      ped_horario : Date
      ped_quantidade: number
+     ped_observacao: string
  }
 
 export class SalvarCompraUseCase {
-    async execute({cli_id, pro_id, ped_status, ped_horario, ped_quantidade}: Produto) {
+    async execute({cli_id, pro_id, ped_status, ped_horario, ped_quantidade, ped_observacao}: Produto) {
 
         const pedido = await prisma.ped_pedidos.create({
             data: {
@@ -18,7 +19,8 @@ export class SalvarCompraUseCase {
                 pro_id, 
                 ped_status,
                 ped_horario,
-                ped_quantidade
+                ped_quantidade,
+                ped_observacao
             }
         })
         
