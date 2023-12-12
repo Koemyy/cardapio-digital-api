@@ -110,7 +110,7 @@ model ped_pedidos {
   ped_status_pg String @default("NF") @db.Char(3)
   ped_horario  DateTime     @default(now()) @db.Timestamp(6)
   ped_quantidade  Int   
-  ped_observacao  String?    
+  ped_observacao  String?    @db.VarChar(300)
   cli_clientes cli_clientes @relation(fields: [cli_id], references: [cli_id], onDelete: NoAction, map: "ped_fk_cli_id")
   pro_produtos pro_produtos @relation(fields: [pro_id], references: [pro_id], onDelete: NoAction, map: "ped_fk_pro_id")
 }
